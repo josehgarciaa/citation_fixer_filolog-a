@@ -1,41 +1,18 @@
 import glob
 import fitz  # PyMuPDF
 
-
-
-def flags_decomposer(flags):
-    """Make font flags human readable."""
-    l = []
-    if flags & 2 ** 0:
-        l.append("superscript")
-    if flags & 2 ** 1:
-        l.append("italic")
-    if flags & 2 ** 2:
-        l.append("serifed")
-    else:
-        l.append("sans")
-    if flags & 2 ** 3:
-        l.append("monospaced")
-    else:
-        l.append("proportional")
-    if flags & 2 ** 4:
-        l.append("bold")
-    return ", ".join(l)
-
-
-
-
 filename_list = glob.glob("pdf_documents/rbonillacerezo1*pdf")
 
 for filename in filename_list:
+
     print("Processing file:", filename)
+    # Prepare a variable to store the extracted text
+    output_text = ""
+    current_ref =1
 
  #   # Open the PDF file
     doc = fitz.open(filename)
 
-    # Prepare a variable to store the extracted text
-    output_text = ""
-    current_ref =0 
         
     # Loop through each page in the document
     for page_num in range(doc.page_count):
@@ -49,7 +26,7 @@ for filename in filename_list:
             for line in block["lines"]:  # iterate through the text lines
                 first_token = line["spans"][0]
                 txt_line = ""
-                if first_token["size"]> 9.7:                    
+                if first_token["size"]> 9.7 and first_token["size"]<= 10.0:                    
                     for token in line["spans"]:
                         txt_line+=token["text"]
                     int_num = None
@@ -57,9 +34,10 @@ for filename in filename_list:
                         int_num = int(first_token["text"].split(" ")[0])
                     except:
                         pass                
-                    if int_num is not None and int_num == current_ref:
+                    if int_num == current_ref:
                         current_ref +=1
                         txt_line="\n"+txt_line
+                        
                 if len(txt_line) !=0:
                     block_text+=txt_line                
                 
@@ -67,9 +45,8 @@ for filename in filename_list:
                 page_text+=block_text
 
         if len(page_text)!=0:
-            #output_text += f"Page {page_num + 1}:\n"+page_text+"\n"
             output_text += page_text
 
-    with open(filename.replace("        pdf","txt"), "w", encoding="utf-8") as output_file:
+    with open(filename.replace("pdf","txt"), "w", encoding="utf-8") as output_file:
         output_file.write(output_text)
 
