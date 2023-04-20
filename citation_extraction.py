@@ -41,40 +41,34 @@ for filename in filename_list:
     for page_num in range(doc.page_count):
         # Get the current page
         page = doc[page_num]
-            
+        page_text = ""
         # read page text as a dictionary, suppressing extra spaces in CJK fonts
         blocks = page.get_text("dict", flags=11)["blocks"]
         for block in blocks:  # iterate through the text blocks
-            reference_in_block = ""
+            block_text = ""
             for line in block["lines"]:  # iterate through the text lines
-                reference_in_line = ""
-                start_reference = False
+                first_token = line["spans"][0]
+                txt_line = ""
+                if first_token["size"]== 10:                    
+                    for token in line["spans"]:
+                        txt_line+=token["text"]
+                    try:
+                        int_num = int(first_token["text"].split(" ")[0])
+                    except:
+                        pass                
+                    if int_num == current_ref:
+                        current_ref +=1
+                        txt_line="\n"+txt_line
+                if len(txt_line) !=0:
+                    block_text+=txt_line                
+                
+            if len(block_text)!=0:
+                page_text+=block_text
 
-                line_text = ""
-                for s in line["spans"]:  # iterate through the text spans
-                    font_properties = "Font: '%s' (%s), size %g, color #%06x" % (
-                        s["font"],  # font name
-                        flags_decomposer(s["flags"]),  # readable font flags
-                       s["size"],  # font size
-                        s["color"],  # font color
-                    )
-                    fontsize = s["size"] 
-                    span_text = s["text"]
-                    if (fontsize ==10 ):
-                        line_text+=span_text
-                try:
-                    potential_ref_num = int(line_text.split(" ")[0])
-                    if potential_ref_num ==current_ref:
-                        current_ref+=1
-                        line_text="\n\n"+line_text
-                except:
-                    pass
-                reference_in_line+=line_text
+        if len(page_text)!=0:
+            #output_text += f"Page {page_num + 1}:\n"+page_text+"\n"
+            output_text += page_text
 
-                reference_in_block+=reference_in_line
-                     
-        if len(reference_in_block)!=0:
-            output_text += f"Page {page_num + 1}:\n"+reference_in_block+"\n"
     with open(filename.replace(".pdf",".txt"), "w", encoding="utf-8") as output_file:
         output_file.write(output_text)
 
