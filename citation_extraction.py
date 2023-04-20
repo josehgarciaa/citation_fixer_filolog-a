@@ -1,7 +1,7 @@
 import glob
 import fitz  # PyMuPDF
 
-filename_list = glob.glob("pdf_documents/rbonillacerezo1*pdf")
+filename_list = glob.glob("pdf_documents/*pdf")
 
 for filename in filename_list:
 
