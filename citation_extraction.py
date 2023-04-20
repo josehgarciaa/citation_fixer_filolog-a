@@ -49,7 +49,7 @@ for filename in filename_list:
             for line in block["lines"]:  # iterate through the text lines
                 first_token = line["spans"][0]
                 txt_line = ""
-                if first_token["size"]> 9.9:                    
+                if first_token["size"]> 9.7:                    
                     for token in line["spans"]:
                         txt_line+=token["text"]
                     int_num = None
