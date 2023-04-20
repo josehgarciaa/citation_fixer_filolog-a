@@ -69,6 +69,6 @@ for filename in filename_list:
             #output_text += f"Page {page_num + 1}:\n"+page_text+"\n"
             output_text += page_text
 
-    with open(filename.replace(".pdf",".txt"), "w", encoding="utf-8") as output_file:
+    with open(filename.replace("pdf","txt"), "w", encoding="utf-8") as output_file:
         output_file.write(output_text)
 
