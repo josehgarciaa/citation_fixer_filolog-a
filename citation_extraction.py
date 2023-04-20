@@ -27,7 +27,6 @@ def flags_decomposer(flags):
 
 filename_list = glob.glob("pdf_documents/rbonillacerezo1*pdf")
 
-current_ref =1 
 for filename in filename_list:
     print("Processing file:", filename)
 
@@ -36,6 +35,7 @@ for filename in filename_list:
 
     # Prepare a variable to store the extracted text
     output_text = ""
+    current_ref =0 
         
     # Loop through each page in the document
     for page_num in range(doc.page_count):
@@ -70,6 +70,6 @@ for filename in filename_list:
             #output_text += f"Page {page_num + 1}:\n"+page_text+"\n"
             output_text += page_text
 
-    with open(filename.replace("pdf","txt"), "w", encoding="utf-8") as output_file:
+    with open(filename.replace("        pdf","txt"), "w", encoding="utf-8") as output_file:
         output_file.write(output_text)
 
