@@ -49,14 +49,15 @@ for filename in filename_list:
             for line in block["lines"]:  # iterate through the text lines
                 first_token = line["spans"][0]
                 txt_line = ""
-                if first_token["size"]== 10:                    
+                if first_token["size"]> 9.9:                    
                     for token in line["spans"]:
                         txt_line+=token["text"]
+                    int_num = None
                     try:
                         int_num = int(first_token["text"].split(" ")[0])
                     except:
                         pass                
-                    if int_num == current_ref:
+                    if int_num is not None and int_num == current_ref:
                         current_ref +=1
                         txt_line="\n"+txt_line
                 if len(txt_line) !=0:
